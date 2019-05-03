@@ -2,13 +2,12 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import Header from "@/components/Header";
-import TabBar from "@/components/Footer";
+import axios from "axios";
 Vue.config.productionTip = false
-Vue.component({
-  "Header" : Header,
-  "TabBar" : TabBar
-});
+Vue.prototype.$axios = axios;
+Vue.filter('setWH',(url,arg)=>{
+  return url.replace(/w\.h/,arg);
+})
 new Vue({
   router,
   store,

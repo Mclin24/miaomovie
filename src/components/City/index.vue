@@ -1,20 +1,25 @@
 <template>
    <div class="city_body">
         <div class="city_list">
-            <div class="city_hot">
-                <h2>热门城市</h2>
-                <ul class="clearfix">
-                    <li v-for="item in hotCities" :key="item.id">{{item.nm}}</li>
-                </ul>
-            </div>
-            <div class="city_sort" ref="city_sort">
-                <div v-for="itemList in cityList" :key="itemList.list.id">
-                    <h2>{{itemList.index}}</h2>
-                    <ul>
-                        <li v-for="item in itemList.list" :key="item.id">{{item.nm}}</li>
-                    </ul>
-                </div>	
-            </div>
+            <Loading v-if="isLoading"></Loading>
+            <Scroller v-else ref="cityScroller">
+                <div>
+                    <div class="city_hot">
+                        <h2>热门城市</h2>
+                        <ul class="clearfix">
+                            <li v-for="item in hotCities" :key="item.id" @tap="handleChange(item.nm,item.id)">{{item.nm}}</li>
+                        </ul>
+                    </div>
+                    <div class="city_sort" ref="city_sort">
+                        <div v-for="itemList in cityList" :key="itemList.list.id">
+                            <h2>{{itemList.index}}</h2>
+                            <ul>
+                                <li v-for="item in itemList.list" :key="item.id" @tap="handleChange(item.nm,item.id)">{{item.nm}}</li>
+                            </ul>
+                        </div>	
+                    </div>
+                </div>
+            </Scroller>
         </div>
         <div class="city_index">
             <ul v-for="(item,index) in cityList" :key="item.index">
@@ -29,19 +34,31 @@ export default {
    data(){
        return {
            cityList : [],
-           hotCities : []
+           hotCities : [],
+           isLoading : true
        }
    },
    mounted(){
-       this.$axios.get('/api/cityList').then((res)=>{
-           var msg = res.data.msg;
-           if( msg == "ok" ){
-               var cities = res.data.data.cities;
-               var { hotCitiesList , citiesList } = this.formatCitiesList(cities);
-               this.cityList = citiesList;
-               this.hotCities = hotCitiesList;
-           }
-       })
+       var citiesList = window.localStorage.getItem("cityList");
+       var hotCities = window.localStorage.getItem("hotCities");
+        if( citiesList && hotCities ){
+            this.cityList = JSON.parse(citiesList);
+            this.hotCities = JSON.parse(hotCities);
+            this.isLoading = false;
+        }else{
+            this.$axios.get('/api/cityList').then((res)=>{
+                var msg = res.data.msg;
+                if( msg == "ok" ){
+                    var cities = res.data.data.cities;
+                    var { hotCitiesList , citiesList } = this.formatCitiesList(cities);
+                    this.cityList = citiesList;
+                    this.hotCities = hotCitiesList;
+                    this.isLoading = false;
+                    window.localStorage.setItem("cityList",JSON.stringify(citiesList));
+                    window.localStorage.setItem("hotCities",JSON.stringify(hotCitiesList));
+                } 
+            })
+        }
     },
     methods : {
         formatCitiesList(cities){
@@ -86,9 +103,15 @@ export default {
             }
         },
         handleToIndex(index){
-            console.log(index);
             var h2 = this.$refs.city_sort.getElementsByTagName("h2");
-            this.$refs.city_sort.parentNode.scrollTop = h2[index].offsetTop;
+            // this.$refs.city_sort.parentNode.scrollTop = h2[index].offsetTop;
+            this.$refs.cityScroller.scrollTo(-h2[index].offsetTop);
+        },
+        handleChange(nm,id){
+            this.$store.commit("city/setCityData",{nm,id});
+            window.localStorage.setItem("cityName",nm);
+            window.localStorage.setItem("cityId",id);
+            this.$router.push("/movie/playing");
         }
     }
 }

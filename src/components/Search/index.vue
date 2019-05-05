@@ -9,7 +9,7 @@
       <div class="search_result">
          <h3>电影/电视剧/综艺</h3>
          <ul>
-            <li v-for="(item,index) in movieList" :key="item.id">
+            <li v-for="item in movieList" :key="item.id" @touchstart="handleToDetail(item.id)">
                <div class="img"><img :src="item.img | setWH('128.180')"></div>
                <div class="info">
                   <p><span>{{item.nm}}</span><span>{{item.sc}}</span></p>
@@ -60,6 +60,9 @@ export default {
          if( typeof this.source === "function"){
             this.source("终止请求");
          }
+      },
+      handleToDetail(movieId){
+         this.$router.push('/movie/detail/3/'+movieId);
       }
    }
 }

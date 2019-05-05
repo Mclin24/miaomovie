@@ -38,6 +38,16 @@ export default {
          props: {
             detail : true
          }
+      },
+      {
+         path : "detail/3/:movieId",
+         components: {
+            default : ()=>import("@/components/Search"),
+            detail : ()=>import("@/views/Movie/detail.vue"),
+         },
+         props: {
+            detail : true
+         }
       }
    ]
 }

@@ -4,9 +4,9 @@
 		<Scroller v-else>
 			<ul>
 				<li v-for="item in commingList" :key="item.id">
-					<div class="pic_show"><img :src="item.img | setWH('128.180')"/></div>
+					<div class="pic_show"><img :src="item.img | setWH('128.180')" @touchstart="handleToDetail(item.id)"/></div>
 					<div class="info_list">
-						<h2>{{item.nm}}<img v-if="item.version" src="@/assets/maxs.png" alt=""/></h2>
+						<h2 @touchstart="handleToDetail(item.id)">{{item.nm}}<img v-if="item.version" src="@/assets/maxs.png" alt=""/></h2>
 						<p><span class="person">17746</span> {{item.wish}}</p>
 						<p>主演: {{item.star}}</p>
 						<p>{{item.rt}}上映</p>
@@ -45,6 +45,11 @@ export default {
 				this.isLoading = false
 			}
 		})
+	},
+	methods: {
+		handleToDetail(movieId){
+			this.$router.push("/movie/detail/2/"+movieId);
+		}
 	}
 }
 </script>

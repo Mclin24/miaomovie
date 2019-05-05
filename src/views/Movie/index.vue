@@ -1,23 +1,24 @@
 <template>
    <div id="main"> 
       <Header title="喵喵电影"></Header>
-         <div id="content">
-                <div class="movie_menu">
-                    <router-link tag="div" to="/movie/city" class="city_name">
-                        <span>{{$store.state.city.cityName}}</span><i class="iconfont icon-lower-triangle"></i>
-                    </router-link>
-                    <div class="hot_swtich">
-                        <router-link tag="div" to="/movie/playing" class="hot_item">正在热映</router-link>
-                        <router-link tag="div" to="/movie/commingSoon" class="hot_item">即将上映</router-link>
-                    </div>
-                    <router-link tag="div" to="/movie/search" class="search_entry">
-                        <i class="iconfont icon-sousuo"></i>
-                    </router-link>
+        <div id="content">
+            <div class="movie_menu">
+                <router-link tag="div" to="/movie/city" class="city_name">
+                    <span>{{$store.state.city.cityName}}</span><i class="iconfont icon-lower-triangle"></i>
+                </router-link>
+                <div class="hot_swtich">
+                    <router-link tag="div" to="/movie/playing" class="hot_item">正在热映</router-link>
+                    <router-link tag="div" to="/movie/commingSoon" class="hot_item">即将上映</router-link>
                 </div>
-                <keep-alive>
-                    <router-view />
-                </keep-alive>
+                <router-link tag="div" to="/movie/search" class="search_entry">
+                    <i class="iconfont icon-sousuo"></i>
+                </router-link>
             </div>
+            <keep-alive>
+                <router-view />
+            </keep-alive>
+        </div>
+        <router-view name="detail"></router-view>
       <TabBar></TabBar>
    </div>
 </template>
